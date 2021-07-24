@@ -1,0 +1,25 @@
+.container-loading {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0,0,0, .4);
+  z-index: 2;
+}
+
+.new-account {
+  text-align: center;
+  margin-top: 3rem !important;
+}
+
+.new-account p {
+  margin-bottom: 0;
+}
+
+.input-group-text {
+  cursor: pointer;
+}

@@ -1,0 +1,7 @@
+{
+  "/dashboard/*": {
+    "target": "http://4485949.online-server.cloud:8080/manali-backend/",
+    "secure": false,
+    "logLevel": "debug"
+  }
+}

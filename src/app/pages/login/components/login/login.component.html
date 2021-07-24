@@ -1,0 +1,93 @@
+<div class="authincation h-100">
+  <div class="container vh-100">
+    <div class="row justify-content-center h-100 align-items-center">
+      <div class="col-lg-6 col-md-8">
+        <div class="authincation-content">
+          <div class="row no-gutters">
+            <div class="col-xl-12">
+              <div class="auth-form">
+                <div class="text-center mb-3">
+                  <a [routerLink]="['/admin/index']"><img src="assets/images/logo-full.png" alt=""></a>
+                </div>
+                <h4 class="text-center mb-4">Inicio de Sesión</h4>
+                <form [formGroup]="signinForm" (ngSubmit)="signin()">
+                  <div class="form-group">
+                    <label class="mb-1"><strong>Correo Electrónico</strong></label>
+                    <input 
+                    type="email" 
+                    class="form-control" 
+                    name="email" 
+                    formControlName="email"
+                    placeholder="Correo Electrónico"
+                    value="" />
+                    <mat-hint class="text-danger fs-13 mt-1">
+                      <span *ngIf="emailField.hasError('required') && emailField.touched" class="form-error-msg">
+                        Correo electrónico es requerido
+                      </span>
+                      <span *ngIf="emailField.hasError('email') && emailField.touched" class="form-error-msg">
+                        Correo electrónico incorrecto
+                      </span>
+                    </mat-hint>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="mb-1"><strong>Contraseña</strong></label>
+                    <div class="input-group">
+                      <input 
+                      #inputPassword
+                      type="password" 
+                      class="form-control" 
+                      name="contrasena" 
+                      id="password"
+                      formControlName="contrasena"
+                      placeholder="Contraseña" 
+                      value="" />
+                      <div class="input-group-append show-pass1 ">
+                        <span class="input-group-text" (click)="toggleEyeIcon(inputPassword)">
+                          <i class="fa" [ngClass]="{'fa-eye-slash': toggleEye, 'fa-eye': !toggleEye}"></i>
+                        </span>
+                      </div>
+                    </div>
+                    <div class="text-danger fs-13 mt-1">
+                      <span *ngIf="passwordField.hasError('required') && passwordField.touched" class="form-error-msg">
+                        Contraseña es requerida
+                      </span>
+                      <span *ngIf="passwordField.hasError('minlength') && passwordField.touched" class="form-error-msg">
+                        Contraseña debe ser mayor a 6 caracteres
+                      </span>
+                    </div>
+                  </div>
+                  <div class="form-row d-flex justify-content-end mt-4 mb-2">
+                    <!-- <div class="form-group">
+                                           <div class="custom-control custom-checkbox ml-1">
+                                                <input type="checkbox" class="custom-control-input" id="basic_checkbox_1">
+                                                <label class="custom-control-label" for="basic_checkbox_1">Remember my preference</label>
+                                            </div>
+                                        </div> -->
+                    <div class="form-group">
+                      <a [routerLink]="['recordar-contrasena']">¿Olvidaste tu contraseña?</a>
+                    </div>
+                  </div>
+                  <div class="text-center">
+                    <button #signInButton type="submit" class="btn btn-primary btn-block"
+                      [disabled]="signinForm.invalid">Iniciar Sesión</button>
+                  </div>
+                </form>
+                <div class="new-account mt-3">
+                  <p>¿Aún no tienes cuenta? </p>
+                  <a class="text-primary" [routerLink]="['crear-cuenta']">Crear Cuenta</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container-loading" *ngIf="loading">
+  <div class="spinner-grow text-primary" style="width: 3rem; height: 3rem;" role="status">
+    <span class="sr-only">Loading...</span>
+  </div>
+</div>

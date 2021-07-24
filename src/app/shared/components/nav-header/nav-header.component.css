@@ -1,0 +1,34 @@
+.is-employe {
+  background-color: #fec007;
+  background-color: #313131;
+}
+
+.nav-header__image--icon {
+  max-width: 200px;
+}
+
+.nav-header__image--icon.is-active {
+  max-width: 110px;
+}
+
+.nav-header__image--letters {
+  max-width: 100px;
+}
+
+.nav-header .brand-logo {
+  justify-content: center !important;
+}
+
+[data-sidebar-style="full"][data-layout="vertical"] .menu-toggle .nav-header .brand-logo {
+  justify-content: end !important;
+}
+
+@media screen and (max-width: 1024px) {
+  .nav-header .brand-logo {
+    justify-content: end !important;
+  }
+
+  .nav-header__image--icon {
+    max-width: 110px;
+  }
+}
