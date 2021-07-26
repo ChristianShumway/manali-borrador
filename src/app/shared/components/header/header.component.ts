@@ -1,4 +1,5 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { Router } from '@angular/router';
 import {NgbDropdownConfig} from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
@@ -12,7 +13,9 @@ export class HeaderComponent implements OnInit, AfterViewInit {
 	toggleSingle: boolean = true;
 	typeUser: number;
 	
-	constructor() { }
+	constructor(
+		private router: Router
+	) { }
 	
 	ngOnInit(): void {
 		this.typeUser = JSON.parse(localStorage.getItem('typeUser'));
@@ -28,6 +31,15 @@ export class HeaderComponent implements OnInit, AfterViewInit {
 	}
 	singleChatWindow() {
 		this.toggleSingle = !this.toggleSingle;
+	}
+
+	logout() {
+		localStorage.removeItem('typeUser');
+		localStorage.removeItem('currentUserManali');
+		console.log('entro aqui');
+		this.router.navigateByUrl('login');
+		window.location.reload();
+
 	}
 
 }
