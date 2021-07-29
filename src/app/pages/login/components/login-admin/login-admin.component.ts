@@ -58,14 +58,19 @@ export class LoginAdminComponent implements OnInit {
           console.log(result);
           const employe: Employe = result.response;
           if (result.noEstatus === 5) {
-            localStorage.setItem('currentUserManali', JSON.stringify(employe.idEmpleado));
-            localStorage.setItem('typeUser', JSON.stringify(1));
-            this.authService.isLogin(employe.idEmpleado);
-            this.useAlerts('Acceso de usuario correcto', ' ', 'success-dialog');
-            this.existeUsuario = true;
-            this.router.navigateByUrl('/admin');
+            if (employe.cambiarContrasena === 0) {
+              localStorage.setItem('currentUserManali', JSON.stringify(employe.idEmpleado));
+              localStorage.setItem('typeUser', JSON.stringify(1));
+              this.authService.isLogin(employe.idEmpleado);
+              this.useAlerts(result.mensaje, ' ', 'success-dialog');
+              this.existeUsuario = true;
+              this.router.navigateByUrl('/admin');
+            } else if (employe.cambiarContrasena === 1) {
+              this.router.navigateByUrl('/login/admin/actualizar-contrasena');
+              localStorage.setItem('TemporalEmployeManali', JSON.stringify(employe));
+            }
           } else {
-            this.useAlerts('Usuario no encontrado', ' ', 'error-dialog');
+            this.useAlerts(result.mensaje, ' ', 'error-dialog');
             this.submitButton.nativeElement.disabled = false;
             this.loading = false;
           }

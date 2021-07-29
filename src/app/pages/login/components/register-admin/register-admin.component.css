@@ -20,6 +20,6 @@
   margin-bottom: 0;
 }
 
-.button {
-  margin-top: 32px;
+.input-group-text {
+  cursor: pointer;
 }

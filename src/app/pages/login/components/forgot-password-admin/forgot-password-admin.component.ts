@@ -6,10 +6,10 @@ import { AuthService } from '@core/services/auth.service';
 
 @Component({
   selector: 'app-forgot-password',
-  templateUrl: './forgot-password.component.html',
-  styleUrls: ['./forgot-password.component.css']
+  templateUrl: './forgot-password-admin.component.html',
+  styleUrls: ['./forgot-password-admin.component.css']
 })
-export class ForgotPasswordComponent implements OnInit {
+export class ForgotPasswordAdminComponent implements OnInit {
 
   @ViewChild('button') submitButton;
   form: FormGroup;
@@ -33,12 +33,12 @@ export class ForgotPasswordComponent implements OnInit {
     this.loading = true;
     if(this.form.valid) {
       const email = this.form.value;
-      this.authService.restorePasswordUser(email).subscribe(
+      this.authService.restorePasswordEmploye(email).subscribe(
         response => {
           console.log(response);
           if(response.noEstatus === 5) {
             this.useAlerts(response.mensaje, ' ', 'success-dialog');
-            this.router.navigateByUrl('/login');
+            this.router.navigateByUrl('/login/admin');
           } else {
             this.useAlerts(response.mensaje, ' ', 'error-dialog');
             this.submitButton.nativeElement.disabled = false;

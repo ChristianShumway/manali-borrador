@@ -1,44 +1,51 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormGroup, Validators, FormBuilder } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Validators, FormGroup, FormBuilder } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 import { DatePipe } from '@angular/common';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { AuthService } from '@core/services/auth.service';
 import { User } from '@core/models/user';
+import { AuthService } from '@core/services/auth.service';
+import { ValidarQueSeanIguales } from './../../../../utils/validators';
 
 @Component({
-  selector: 'app-register',
-  templateUrl: './register.component.html',
-  styleUrls: ['./register.component.css']
+  selector: 'app-update-password',
+  templateUrl: './update-password.component.html',
+  styleUrls: ['./update-password.component.css']
 })
-export class RegisterComponent implements OnInit {
-  @ViewChild('signInButton') submitButton;
+export class UpdatePasswordComponent implements OnInit {
+
+  @ViewChild('button') submitButton;
   form: FormGroup;
+  returnUrl: string;
   loading: boolean = false;
   toggleEye: boolean = true;
+  toggleEyeConfirm: boolean = true;
+  user: User;
   today = new Date();
   pipe = new DatePipe('en-US');
 
+
   constructor(
-    private authService: AuthService,
     private fb: FormBuilder,
     private router: Router,
-    private snackBar: MatSnackBar
+    private route: ActivatedRoute,
+    private authService: AuthService,
+    private snackBar: MatSnackBar,
   ) { }
 
-  
   ngOnInit(): void {
+    this.user = JSON.parse(localStorage.getItem('TemporalUserManali'));
     this.getValidations();
+    // get return url from route parameters or default to '/'
+    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
   }
-  
+
   getValidations() {
     this.form = this.fb.group({
-      nombre: ['', [Validators.required]],
-      apellidoPaterno: ['', []],
-      apellidoMaterno: ['', []],
-      email: ['',[ Validators.required, Validators.email]],
       contrasena: ['', [Validators.required, Validators.minLength(6)]],
-      telefono: ['', [Validators.required, Validators.pattern("^((\\+91-?)|0)?[0-9]{10}$")]]
+      confirmarContrasena: ['', [Validators.required, Validators.minLength(6)]],
+    }, {
+      validators: ValidarQueSeanIguales
     });
   }
 
@@ -47,32 +54,48 @@ export class RegisterComponent implements OnInit {
 		inputPassword.type = inputPassword.type === 'password' ? 'text' : 'password';
 	}
 
-  createCount() {
+  toggleEyeIconConfirm(inputPasswordConfirm:any) {
+		this.toggleEyeConfirm = !this.toggleEyeConfirm;
+		inputPasswordConfirm.type = inputPasswordConfirm.type === 'password' ? 'text' : 'password';
+	}
+
+  checarSiSonIguales(): boolean {
+    return this.form.hasError('noSonIguales') &&
+      this.form.get('contrasena').dirty &&
+      this.form.get('confirmarContrasena').dirty;
+  }
+
+  updatePassword() {
     if(this.form.valid) {
+      const password = this.form.value.contrasena;
       this.submitButton.nativeElement.disabled = true;
       this.loading = true;
       const format = 'yyyy-MM-dd';
-      const usuario: Partial<User> = {
+
+      const user = {
+        ...this.user,
         fechaCreacion: this.pipe.transform(this.today, format),
-        ...this.form.value
-      }
+        contrasena: password
+      };
 
-      console.log(usuario);
+      console.log(user);
 
-      this.authService.updateUser(usuario).subscribe(
+      this.authService.updatePasswordUser(user).subscribe(
         response => {
           console.log(response);
-          if (response.noEstatus === 5) {
+          if (response.noEstatus === 5){
             this.router.navigateByUrl('/login');
             this.useAlerts(response.mensaje, ' ', 'success-dialog');
-          } else {
+            localStorage.removeItem('TemporalUserManali');
+          }
+          else {
             this.useAlerts(response.mensaje, ' ', 'error-dialog');
             this.submitButton.nativeElement.disabled = false;
             this.loading = false;
           }
         },
         error => {
-          console.log(error);
+          console.error(error);
           this.useAlerts('Error del sistema, favor de reportar al administrador', ' ', 'error-dialog');
           this.submitButton.nativeElement.disabled = false;
           this.loading = false;
@@ -81,20 +104,12 @@ export class RegisterComponent implements OnInit {
     }
   }
 
-  get nameField() {
-    return this.form.get('nombre');
-  }
-
-  get emailField() {
-    return this.form.get('email');
-  }
-
   get passwordField() {
     return this.form.get('contrasena');
   }
 
-  get phoneField() {
-    return this.form.get('telefono');
+  get checkPasswordField() {
+    return this.form.get('confirmarContrasena');
   }
 
   useAlerts(message, action, className){

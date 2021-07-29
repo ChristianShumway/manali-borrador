@@ -1,3 +1,4 @@
+import { Employe } from '@core/models/employe';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -8,10 +9,10 @@ import { User } from '@core/models/user';
 
 @Component({
   selector: 'app-register',
-  templateUrl: './register.component.html',
-  styleUrls: ['./register.component.css']
+  templateUrl: './register-admin.component.html',
+  styleUrls: ['./register-admin.component.css']
 })
-export class RegisterComponent implements OnInit {
+export class RegisterAdminComponent implements OnInit {
   @ViewChild('signInButton') submitButton;
   form: FormGroup;
   loading: boolean = false;
@@ -52,18 +53,18 @@ export class RegisterComponent implements OnInit {
       this.submitButton.nativeElement.disabled = true;
       this.loading = true;
       const format = 'yyyy-MM-dd';
-      const usuario: Partial<User> = {
+      const empleado: Partial<Employe> = {
         fechaCreacion: this.pipe.transform(this.today, format),
         ...this.form.value
       }
 
-      console.log(usuario);
+      console.log(empleado);
 
-      this.authService.updateUser(usuario).subscribe(
+      this.authService.updateEmploye(empleado).subscribe(
         response => {
           console.log(response);
           if (response.noEstatus === 5) {
-            this.router.navigateByUrl('/login');
+            this.router.navigateByUrl('/login/admin');
             this.useAlerts(response.mensaje, ' ', 'success-dialog');
           } else {
             this.useAlerts(response.mensaje, ' ', 'error-dialog');

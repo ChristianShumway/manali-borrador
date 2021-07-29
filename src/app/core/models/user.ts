@@ -1,6 +1,7 @@
 export interface User {
   apellidoMaterno: string;
   apellidoPaterno: string;
+  cambiarContrasena?: number;
   contrasena: any;
   email: string;
   fechaCreacion?: string;

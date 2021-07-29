@@ -48,4 +48,34 @@ export class AuthService {
     this.currentUserSubject.next(idUser);
     console.log(idUser);
   }
+
+  updateUser(user: Partial<User>) {
+    const headerss = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.http.post<any>(`${environment.apiURL}/catalogo/updateUser`, JSON.stringify(user), { headers: headerss })
+  }
+
+  updateEmploye(employe: Partial<Employe>) {
+    const headerss = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.http.post<any>(`${environment.apiURL}/catalogo/updateEmpleado`, JSON.stringify(employe), { headers: headerss })
+  }
+
+  restorePasswordUser(email: string) {
+    const headerss = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.http.post<any>(`${environment.apiURL}/dashboard/restorePasswordUsuario `, JSON.stringify(email), { headers: headerss })
+  }
+
+  restorePasswordEmploye(email: string) {
+    const headerss = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.http.post<any>(`${environment.apiURL}/dashboard/restorePassWordEmploye `, JSON.stringify(email), { headers: headerss })
+  }
+
+  updatePasswordUser(user: User) {
+    const headerss = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.http.post<any>(`${environment.apiURL}/dashboard/changePasswordUsuario`, JSON.stringify(user), { headers: headerss })
+  }
+
+  updatePasswordEmploye(employe: Employe) {
+    const headerss = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.http.post<any>(`${environment.apiURL}/dashboard/changePasswordEmploye`, JSON.stringify(employe), { headers: headerss })
+  }
 }

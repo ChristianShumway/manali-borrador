@@ -46,7 +46,7 @@ export class LoginComponent implements OnInit {
 
   signin() {
     if(this.signinForm.valid) {
-      console.log(this.signinForm.value);
+      // console.log(this.signinForm.value);
       this.submitButton.nativeElement.disabled = true;
       this.loading = true;
 
@@ -55,16 +55,21 @@ export class LoginComponent implements OnInit {
       .subscribe( 
         result => {
           const user: User = result.response;
-          console.log(user);
+          // console.log(user);
           if (result.noEstatus === 5) {
-            localStorage.setItem('currentUserManali', JSON.stringify(user.idUsuario));
-            localStorage.setItem('typeUser', JSON.stringify(2));
-            this.authService.isLogin(user.idUsuario);
-            this.useAlerts('Acceso de usuario correcto', ' ', 'success-dialog');
-            this.existeUsuario = true;
-            this.router.navigateByUrl('/admin');
+            if(user.cambiarContrasena === 0) {
+              localStorage.setItem('currentUserManali', JSON.stringify(user.idUsuario));
+              localStorage.setItem('typeUser', JSON.stringify(2));
+              this.authService.isLogin(user.idUsuario);
+              this.useAlerts(result.mensaje, ' ', 'success-dialog');
+              this.existeUsuario = true;
+              this.router.navigateByUrl('/admin');
+            } else if (user.cambiarContrasena === 1) {
+              this.router.navigateByUrl('/login/actualizar-contrasena');
+              localStorage.setItem('TemporalUserManali', JSON.stringify(user));
+            }
           } else {
-            this.useAlerts('Usuario no encontrado', ' ', 'error-dialog');
+            this.useAlerts(result.mensaje,  ' ', 'error-dialog');
             this.submitButton.nativeElement.disabled = false;
             this.loading = false;
           }
